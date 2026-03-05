@@ -1,0 +1,16 @@
+node_modules
+.next
+.env
+.env.*.local
+.DS_Store
+public/uploads/*
+!public/uploads/.gitkeep
+prisma/db.sqlite
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.tsbuildinfo
+next-env.d.ts
+dist/
+.turbo
