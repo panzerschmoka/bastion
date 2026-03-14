@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        /* Claude Console Light — warm off-white, dark charcoal text, peach accent */
+        --background: 40 33% 97%;        /* #FAF9F6 */
+        --foreground: 20 14% 10%;        /* #1C1917 */
+        --card: 0 0% 100%;              /* #FFFFFF */
+        --card-foreground: 20 14% 10%;   /* #1C1917 */
+        --popover: 0 0% 100%;
+        --popover-foreground: 20 14% 10%;
+        --primary: 20 14% 10%;           /* Dark charcoal buttons */
+        --primary-foreground: 40 33% 97%;/* Off-white text on dark buttons */
+        --secondary: 40 20% 94%;         /* #F2F0EB — slightly warm gray */
+        --secondary-foreground: 20 14% 10%;
+        --muted: 40 12% 93%;             /* #EDEBE7 */
+        --muted-foreground: 25 5% 45%;   /* #787370 — warm mid-gray */
+        --accent: 18 60% 59%;            /* #D97757 — Anthropic Peach */
+        --accent-foreground: 0 0% 100%;
+        --destructive: 0 72% 51%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 30 8% 88%;             /* #E5E2DD — warm border */
+        --input: 30 8% 88%;
+        --ring: 18 60% 59%;              /* Peach ring */
+        --radius: 0.5rem;
+    }
+
+    .dark {
+        /* Claude Console Dark — deep charcoal, soft white text, peach accent */
+        --background: 240 6% 10%;        /* #18181A */
+        --foreground: 0 0% 93%;          /* #EDEDED */
+        --card: 240 5% 16%;              /* #27272A */
+        --card-foreground: 0 0% 93%;
+        --popover: 240 5% 16%;
+        --popover-foreground: 0 0% 93%;
+        --primary: 0 0% 93%;             /* White buttons in dark mode */
+        --primary-foreground: 240 6% 10%;
+        --secondary: 240 4% 20%;         /* #313135 */
+        --secondary-foreground: 0 0% 93%;
+        --muted: 240 4% 20%;
+        --muted-foreground: 240 3% 58%;  /* #929295 */
+        --accent: 18 60% 59%;            /* #D97757 — Anthropic Peach */
+        --accent-foreground: 0 0% 100%;
+        --destructive: 0 72% 51%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 240 4% 24%;            /* #3B3B40 */
+        --input: 240 4% 24%;
+        --ring: 18 60% 59%;              /* Peach ring */
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+        font-family: 'Inter', sans-serif;
+    }
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Smooth transitions */
+* {
+    scroll-behavior: smooth;
+}

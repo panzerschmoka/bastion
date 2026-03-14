@@ -1,0 +1,98 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Navbar } from "@/components/shared/Navbar";
+import { ProjectList } from "@/features/projects/components/ProjectList";
+import { PromptInput } from "@/features/ai/components/PromptInput";
+import { LoadingScreen } from "@/components/shared/LoadingSpinner";
+
+interface Project {
+    id: string;
+    title: string;
+    status: string;
+    updatedAt: Date;
+    thumbnail?: string | null;
+}
+
+export default function DashboardPage() {
+    const { data: session, status } = useSession();
+    const router = useRouter();
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            router.push("/login");
+        }
+    }, [status, router]);
+
+    useEffect(() => {
+        if (status === "authenticated") {
+            fetchProjects();
+        }
+    }, [status]);
+
+    const fetchProjects = async () => {
+        try {
+            setIsLoading(true);
+            const res = await fetch("/api/projects");
+            const data = await res.json();
+            setProjects(data.items || []);
+        } catch (error) {
+            console.error("Failed to fetch projects:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleCreateNew = async () => {
+        try {
+            const res = await fetch("/api/projects", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title: "Новый проект" }),
+            });
+            const project = await res.json();
+            router.push(`/editor/${project.id}`);
+        } catch (error) {
+            console.error("Failed to create project:", error);
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm("Удалить проект?")) return;
+        try {
+            await fetch(`/api/projects/${id}`, { method: "DELETE" });
+            setProjects((prev) => prev.filter((p) => p.id !== id));
+        } catch (error) {
+            console.error("Failed to delete project:", error);
+        }
+    };
+
+    if (status === "loading") return <LoadingScreen />;
+
+    return (
+        <div className="min-h-screen flex flex-col bg-background">
+            <Navbar />
+            <main className="flex-1 container mx-auto px-4 md:px-8 py-8 space-y-8">
+                {/* AI Prompt Section */}
+                <section>
+                    <h2 className="text-lg font-semibold mb-4">🎬 Создать с помощью AI</h2>
+                    <PromptInput />
+                </section>
+
+                {/* Projects */}
+                <section>
+                    <ProjectList
+                        projects={projects}
+                        isLoading={isLoading}
+                        onCreateNew={handleCreateNew}
+                        onDelete={handleDelete}
+                    />
+                </section>
+            </main>
+        </div>
+    );
+}

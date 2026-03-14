@@ -27,6 +27,9 @@ Phase 3 Complete — Moving to Lib/Utils (Phase 4)
 - **DB:** Prisma + PostgreSQL
 - **Video:** Remotion (programmatic video)
 - **AI:** Anthropic Claude API для генерации Remotion-кода
+- **Vibe-Coding Rule:** НЕ запускать `npm run dev` для проверки кода. Всегда использовать `npm run build` для выявления ошибок компиляции и типов.
+- **Workflow:** Перед коммитом обязательно запускать `npm run lint` и `typecheck`.
+
 
 ## 📋 Code Conventions
 - **Компоненты:** PascalCase (`Button.tsx`)
@@ -35,6 +38,8 @@ Phase 3 Complete — Moving to Lib/Utils (Phase 4)
 - **TypeScript:** strict mode, NO `any`
 - **API:** try-catch + zod validation
 - **Ошибки пользователю:** только на русском
+- **Структура:** Модульная архитектура (src/features/). Каждая фича содержит свои компоненты, логику и хуки.
+
 
 ## 📋 Task List
 - [x] .gitignore, .env, .env.example
