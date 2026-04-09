@@ -17,21 +17,42 @@ export type {
 } from "./project";
 export { DEFAULT_PROJECT_SETTINGS } from "./project";
 
-// Editor
+// Elements and Compositions
 export type {
-    ElementType,
-    BaseElement,
-    TextElement,
-    ImageElement,
-    VideoElement,
-    ShapeElement,
-    AudioElement,
-    SceneElement,
-    Scene,
-    TimelineTrack,
-    EditorState,
-} from "./editor";
-export { DEFAULT_ELEMENT_PROPS } from "./editor";
+    Composition,
+    CompositionSettings,
+} from "./composition";
+export { COMPOSITION_PRESETS } from "./composition";
+
+// Layers
+export type {
+    LayerType,
+    BlendMode,
+    TrackMatte,
+    Transform,
+    Layer,
+    TextLayerData,
+    SolidLayerData,
+    ImageLayerData,
+    VideoLayerData,
+    ShapeLayerData,
+} from "./layer";
+
+// Keyframes
+export type {
+    InterpolationType,
+    Keyframe,
+    AnimatedProperty,
+} from "./keyframe";
+export { createAnimatedProperty } from "./keyframe";
+
+// Effects
+export type {
+    EffectCategory,
+    Effect,
+    EffectParameterDef,
+    EffectDefinition,
+} from "./effect";
 
 // API
 export type {

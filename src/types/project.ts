@@ -3,12 +3,11 @@ import type {
     Video,
     Asset,
     Generation,
-    ProjectStatus,
-    AssetType,
 } from "@prisma/client";
 
-// ── Re-export Prisma enums для удобства ──
-export type { ProjectStatus, AssetType };
+// ── SQLite Schema Maps Enums to Strings ──
+export type ProjectStatus = "DRAFT" | "RENDERING" | "COMPLETED" | "FAILED";
+export type AssetType = "IMAGE" | "VIDEO" | "AUDIO";
 
 // ── Настройки проекта (хранятся в JSON-поле) ──
 export interface ProjectSettings {

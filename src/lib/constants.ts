@@ -29,9 +29,9 @@ export const PATHS = {
 
 // ── AI ──
 export const AI_DEFAULTS = {
-    MODEL: "claude-3-5-sonnet-20240620",
-    MAX_TOKENS: 8192,
-    TEMPERATURE: 0.7,
+    MODEL: "claude-sonnet-4-20250514",
+    MAX_TOKENS: 16384,
+    TEMPERATURE: 0.4,
 } as const;
 
 // ── Пагинация ──

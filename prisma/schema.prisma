@@ -1,13 +1,14 @@
 // MotionAI — Prisma Schema
-// PostgreSQL + NextAuth Adapter
+// Turso (libSQL) + NextAuth + Stripe
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./dev.db"
 }
 
 // ────────────────────────────────────────
@@ -58,7 +59,6 @@ model VerificationToken {
 // Application Models
 // ────────────────────────────────────────
 
-
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
@@ -70,11 +70,18 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  // Stripe subscription fields
+  plan                 String    @default("FREE")
+  stripeCustomerId     String?   @unique
+  stripeSubscriptionId String?   @unique
+  planExpiresAt        DateTime?
+
   accounts    Account[]
   sessions    Session[]
   projects    Project[]
   assets      Asset[]
   generations Generation[]
+  payments    Payment[]
 
   @@map("users")
 }
@@ -158,4 +165,24 @@ model Generation {
   @@index([projectId])
   @@index([userId])
   @@map("generations")
+}
+
+// ────────────────────────────────────────
+// Payment / Subscription History
+// ────────────────────────────────────────
+
+model Payment {
+  id                String   @id @default(cuid())
+  userId            String
+  stripePaymentId   String   @unique
+  amount            Int      // in cents
+  currency          String   @default("usd")
+  status            String   // succeeded, failed, pending
+  plan              String   // FREE, PRO, BUSINESS
+  createdAt         DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("payments")
 }

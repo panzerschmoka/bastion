@@ -62,7 +62,7 @@ export default function DashboardPage() {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm("Удалить проект?")) return;
+        if (!confirm("УДАЛИТЬ ПРОЕКТ?")) return;
         try {
             await fetch(`/api/projects/${id}`, { method: "DELETE" });
             setProjects((prev) => prev.filter((p) => p.id !== id));
@@ -74,17 +74,33 @@ export default function DashboardPage() {
     if (status === "loading") return <LoadingScreen />;
 
     return (
-        <div className="min-h-screen flex flex-col bg-background">
+        <div className="min-h-screen flex flex-col bg-abyss">
             <Navbar />
-            <main className="flex-1 container mx-auto px-4 md:px-8 py-8 space-y-8">
+            <main className="flex-1 container mx-auto px-4 md:px-8 py-8 pt-20 space-y-12">
                 {/* AI Prompt Section */}
                 <section>
-                    <h2 className="text-lg font-semibold mb-4">🎬 Создать с помощью AI</h2>
+                    <div className="flex items-center gap-4 mb-6">
+                        <div className="line-red-thick w-8" />
+                        <h2 className="font-display text-[28px] tracking-[0.2em] text-bone">
+                            ГЕНЕРАЦИЯ
+                        </h2>
+                    </div>
                     <PromptInput />
                 </section>
 
+                {/* Разделитель */}
+                <div className="divider-constructivist">
+                    ────────────────────────────────────────────────────────────
+                </div>
+
                 {/* Projects */}
                 <section>
+                    <div className="flex items-center gap-4 mb-6">
+                        <div className="line-red-thick w-8" />
+                        <h2 className="font-display text-[28px] tracking-[0.2em] text-bone">
+                            ПРОЕКТЫ
+                        </h2>
+                    </div>
                     <ProjectList
                         projects={projects}
                         isLoading={isLoading}

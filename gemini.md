@@ -1,12 +1,12 @@
 # MotionAI Project State
 
 ## 🟢 Status
-Phase 3 Complete — Moving to Lib/Utils (Phase 4)
+Cinematic Quality Upgrade Phase — AI Model + System Prompt + Canvas Enhanced
 
 ## 🔑 Credentials
-- **Database:** PostgreSQL (connection string in `.env` → `DATABASE_URL`)
+- **Database:** SQLite (via Prisma, `prisma/dev.db`)
 - **Auth:** NextAuth.js v4 (secret in `.env` → `NEXTAUTH_SECRET`)
-- **AI:** Anthropic Claude API (key in `.env` → `ANTHROPIC_API_KEY`)
+- **AI:** Anthropic Claude Sonnet 4 (key in `.env` → `ANTHROPIC_API_KEY`)
 - **Storage:** Local filesystem (`public/uploads/`)
 
 ## 📦 Dependencies
@@ -23,13 +23,12 @@ Phase 3 Complete — Moving to Lib/Utils (Phase 4)
 - **Pattern:** Feature-Based (src/features/)
 - **Router:** Next.js App Router
 - **Styling:** Tailwind CSS + Shadcn/ui (dark theme)
-- **State:** Zustand (editorStore)
-- **DB:** Prisma + PostgreSQL
-- **Video:** Remotion (programmatic video)
-- **AI:** Anthropic Claude API для генерации Remotion-кода
+- **State:** Zustand (editorStore, layerStore, timelineStore, keyframeStore, compositionStore, effectStore, selectionStore, historyStore, toolStore)
+- **DB:** Prisma + SQLite
+- **Video:** Remotion (programmatic video) — not yet integrated as player
+- **AI:** Anthropic Claude Sonnet 4 → JSON keyframe generation
 - **Vibe-Coding Rule:** НЕ запускать `npm run dev` для проверки кода. Всегда использовать `npm run build` для выявления ошибок компиляции и типов.
 - **Workflow:** Перед коммитом обязательно запускать `npm run lint` и `typecheck`.
-
 
 ## 📋 Code Conventions
 - **Компоненты:** PascalCase (`Button.tsx`)
@@ -40,29 +39,41 @@ Phase 3 Complete — Moving to Lib/Utils (Phase 4)
 - **Ошибки пользователю:** только на русском
 - **Структура:** Модульная архитектура (src/features/). Каждая фича содержит свои компоненты, логику и хуки.
 
+## 📋 Completed
+- [x] Infrastructure (Phase 0-3): .gitignore, .env, package.json, tsconfig, tailwind
+- [x] Database: Prisma schema + SQLite
+- [x] Types: keyframe, layer, effect, project, composition
+- [x] Lib: interpolation, anthropic, auth, prisma, validations, utils, errors, constants, animationPresets, file, remotion, api-response
+- [x] Stores: 10 stores (keyframe, layer, composition, effect, selection, timeline, history, tool, editor, effects)
+- [x] Hooks: 9 hooks (usePlayback, useKeyboardShortcuts, useAuth, useEditor, useActiveComposition, useProject, useStore, useUpload, use-toast)
+- [x] UI Components: 20+ shadcn components
+- [x] Shared Components: Navbar, Sidebar, ThemeProvider, UserMenu, LoadingSpinner, SessionProvider, ThemeToggle
+- [x] Feature Components: AI (PromptInput, GenerationStatus), Editor (Canvas, Timeline, PropertiesPanel, EditorShell, EditorHeader, Toolbar, CompositionSettingsDialog, ExportDialog, VideoPlayer)
+- [x] API Routes: auth, generate, projects, render, upload
+- [x] Pages: login, register, dashboard, editor/[id]
+- [x] Middleware
+- [x] Keyframe Easing Editor with visual curve preview
+- [x] **Cinematic AI Upgrade**: Claude Haiku → Sonnet 4, completely rewritten system prompt with motion design principles
+- [x] **Canvas Enhancements**: CSS blend modes, 3D perspective, improved text/shape renderers with glow support
 
-## 📋 Task List
-- [x] .gitignore, .env, .env.example
-- [x] package.json (точные версии)
-- [x] tsconfig.json, next.config.js
-- [x] tailwind.config.ts, postcss.config.js
-- [x] public/uploads/ с .gitkeep
-- [x] prisma/schema.prisma
-- [x] prisma/seed.ts
-- [x] src/types/* (5 файлов)
-- [ ] src/lib/* (10 файлов)
-- [ ] src/remotion/* (10 файлов)
-- [ ] src/stores + hooks (5 файлов)
-- [ ] src/components/ui/* (20 файлов)
-- [ ] src/components/shared + providers (6 файлов)
-- [ ] src/components/feature/* (20 файлов)
-- [ ] src/middleware.ts
-- [ ] src/app/api/* (10 route файлов)
-- [ ] src/app/pages/* (16 файлов)
+## 🚧 Next Steps
+- [ ] Remotion Player Integration (replace CSS canvas with @remotion/player for real video export)
+- [ ] 3D Transform support (translateZ, rotateX/Y for true 3D effects)
+- [ ] Multiple AI generation variants (generate 3 options, user picks best)
+- [ ] Template library (pre-made cinematic animations)
+- [ ] AI iteration (refine prompt → update composition)
+- [ ] Curve editor for bezier keyframes
+- [ ] Audio layer support
+- [ ] Export pipeline (MP4/WebM via Remotion renderer)
 
 ## ⚠️ Known Issues
 - Терминал заблокирован workspace валидацией — npm install нужно выполнять вручную
 - Gemini.md в корне Documents конфликтует с workspace — проект создан в `motionai/`
+- AI модель теперь Sonnet 4 — стоит дороже но значительно лучше результат
 
-## 🔄 Context for Next Agent
-Phase 0-3 завершены (Infrastructure + Config + Database + Types). Следующий шаг — src/lib/* (Phase 4: Lib/Utils).
+## 🎯 Product Vision
+- Referent: https://hera.video/ — AI Motion Designer
+- Quality level: After Effects-grade cinematic animations
+- Target: полноценный продукт, не MVP
+- Timeline: 1 месяц
+- 3D эффекты, perspective, parallax — обязательны

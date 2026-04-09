@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "@/components/shared/ThemeProvider";
 import { SessionProvider } from "@/components/shared/SessionProvider";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-    title: "MotionAI — AI видеоредактор",
-    description: "Создавайте профессиональные видео с помощью AI. Генерация сцен, титров и анимаций одним промптом.",
-    keywords: ["видеоредактор", "AI", "MotionAI", "видео", "анимация", "генерация"],
+    title: "MotionAI — Система генерации движения",
+    description: "Создавайте профессиональный моушн-дизайн с помощью AI. Генерация анимаций, визуальный редактор, облачный рендеринг.",
+    keywords: ["моушн-дизайн", "AI", "MotionAI", "анимация", "генерация", "видео"],
     openGraph: {
-        title: "MotionAI — AI видеоредактор",
-        description: "Создавайте профессиональные видео с помощью AI.",
+        title: "MotionAI",
+        description: "AI-powered motion design platform.",
         type: "website",
     },
 };
@@ -21,18 +20,15 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="ru" suppressHydrationWarning>
-            <body className="min-h-screen antialiased">
+        <html lang="ru" className="dark" suppressHydrationWarning>
+            <body className="min-h-screen bg-background text-foreground">
+                <div className="texture-overlay" />
+                <div className="halftone-bg fixed inset-0 pointer-events-none -z-10" />
                 <SessionProvider>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="dark"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
+                    <main className="relative z-0">
                         {children}
-                        <Toaster />
-                    </ThemeProvider>
+                    </main>
+                    <Toaster />
                 </SessionProvider>
             </body>
         </html>

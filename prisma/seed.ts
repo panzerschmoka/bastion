@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -16,7 +16,7 @@ async function main() {
             email: "admin@motionai.local",
             name: "Admin",
             passwordHash: adminPassword,
-            role: UserRole.ADMIN,
+            role: "ADMIN",
         },
     });
 
@@ -31,13 +31,13 @@ async function main() {
             title: "Демо-проект",
             description: "Пример проекта для тестирования платформы MotionAI",
             userId: admin.id,
-            settings: {
+            settings: JSON.stringify({
                 fps: 30,
                 width: 1920,
                 height: 1080,
                 backgroundColor: "#000000",
                 duration: 10,
-            },
+            }),
         },
     });
 
@@ -54,7 +54,7 @@ async function main() {
             width: 1920,
             height: 1080,
             fps: 30,
-            remotionComposition: {
+            remotionComposition: JSON.stringify({
                 scenes: [
                     {
                         id: "scene-1",
@@ -88,7 +88,7 @@ async function main() {
                         ],
                     },
                 ],
-            },
+            }),
         },
     });
 

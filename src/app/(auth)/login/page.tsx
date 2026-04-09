@@ -5,10 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileVideo, Loader2, AlertCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -30,92 +27,117 @@ export default function LoginPage() {
             });
 
             if (result?.error) {
-                setError("Неверный email или пароль");
+                setError("НЕВЕРНЫЙ EMAIL ИЛИ ПАРОЛЬ");
             } else {
                 router.push("/dashboard");
                 router.refresh();
             }
         } catch {
-            setError("Произошла ошибка. Попробуйте снова.");
+            setError("ОШИБКА СИСТЕМЫ. ПОВТОРИТЕ ПОПЫТКУ.");
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-12">
-            {/* Background Glow */}
-            <div className="fixed top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="min-h-screen flex items-center justify-center px-4 bg-abyss relative">
+            {/* Вертикальная линия — декор */}
+            <div className="absolute left-1/2 top-0 w-[1px] h-full bg-charcoal/30 -translate-x-1/2" />
 
-            <Card className="w-full max-w-md relative">
-                <CardHeader className="space-y-3 text-center">
-                    <Link href="/" className="inline-flex items-center gap-2 justify-center mb-2">
-                        <FileVideo className="h-8 w-8 text-accent" />
-                        <span className="text-xl font-bold">MotionAI</span>
+            <div className="w-full max-w-md relative z-10">
+                {/* Лого */}
+                <div className="text-center mb-12">
+                    <Link href="/" className="inline-flex items-center gap-3">
+                        <div className="w-3 h-3 bg-state-red" />
+                        <span className="font-display text-2xl tracking-[0.4em] text-bone">
+                            MOTIONAI
+                        </span>
                     </Link>
-                    <CardTitle className="text-2xl">Вход в аккаунт</CardTitle>
-                    <CardDescription>Введите email и пароль для входа</CardDescription>
-                </CardHeader>
+                </div>
 
-                <form onSubmit={handleSubmit}>
-                    <CardContent className="space-y-4">
-                        {error && (
-                            <div className="flex items-center gap-2 p-3 text-sm bg-destructive/10 text-destructive rounded-md border border-destructive/20">
-                                <AlertCircle className="h-4 w-4 shrink-0" />
-                                {error}
-                            </div>
-                        )}
+                {/* Заголовок */}
+                <div className="mb-10">
+                    <div className="line-red-thick w-16 mb-6" />
+                    <h1 className="font-display text-[48px] tracking-[0.2em] text-bone leading-none">
+                        ВХОД
+                    </h1>
+                    <p className="annotation mt-3">
+                        ВВЕДИТЕ ДАННЫЕ ДЛЯ ДОСТУПА К СИСТЕМЕ
+                    </p>
+                </div>
 
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                placeholder="you@example.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                autoFocus
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="password">Пароль</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                placeholder="••••••••"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
-                        </div>
-                    </CardContent>
-
-                    <CardFooter className="flex flex-col gap-4">
-                        <Button
-                            type="submit"
-                            className="w-full bg-accent hover:bg-accent/90 text-white"
-                            disabled={isLoading}
-                        >
-                            {isLoading ? (
-                                <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Вход...
-                                </>
-                            ) : (
-                                "Войти"
-                            )}
-                        </Button>
-                        <p className="text-sm text-muted-foreground text-center">
-                            Нет аккаунта?{" "}
-                            <Link href="/register" className="text-accent hover:underline font-medium">
-                                Регистрация
-                            </Link>
+                {/* Ошибка */}
+                {error && (
+                    <div className="border border-state-red bg-state-red/10 p-4 mb-6">
+                        <p className="font-mono text-[12px] text-state-red tracking-wider">
+                            {error}
                         </p>
-                    </CardFooter>
+                    </div>
+                )}
+
+                {/* Форма */}
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                        <label className="font-mono text-[11px] text-bone/40 uppercase tracking-[0.2em]">
+                            EMAIL
+                        </label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            autoFocus
+                            className="w-full bg-transparent border border-charcoal px-4 py-3 font-mono text-[14px] text-bone placeholder:text-bone/20 focus:border-state-red focus:outline-none transition-colors duration-150"
+                            placeholder="you@example.com"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="font-mono text-[11px] text-bone/40 uppercase tracking-[0.2em]">
+                            ПАРОЛЬ
+                        </label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            className="w-full bg-transparent border border-charcoal px-4 py-3 font-mono text-[14px] text-bone placeholder:text-bone/20 focus:border-state-red focus:outline-none transition-colors duration-150"
+                            placeholder="••••••••"
+                        />
+                    </div>
+
+                    <Button
+                        type="submit"
+                        variant="propaganda"
+                        size="lg"
+                        className="w-full"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                АВТОРИЗАЦИЯ...
+                            </>
+                        ) : (
+                            "ВОЙТИ В СИСТЕМУ"
+                        )}
+                    </Button>
                 </form>
-            </Card>
+
+                {/* Нижняя ссылка */}
+                <div className="mt-8 text-center">
+                    <div className="line-red w-12 mx-auto mb-4" />
+                    <p className="font-mono text-[12px] text-bone/30 tracking-wider">
+                        НЕТ АККАУНТА?{" "}
+                        <Link
+                            href="/register"
+                            className="text-state-red hover:text-bone transition-colors duration-150"
+                        >
+                            РЕГИСТРАЦИЯ
+                        </Link>
+                    </p>
+                </div>
+            </div>
         </div>
     );
 }

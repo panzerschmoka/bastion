@@ -1,151 +1,255 @@
 "use client";
 
-import { useEditor } from "@/hooks/useEditor";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Type, Image as ImageIcon, Sparkles, LayoutTemplate, Undo2, Redo2, Copy, Trash2, MousePointer2 } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { 
+    MousePointer2, 
+    Hand, 
+    Type, 
+    Square, 
+    Circle,
+    Image as ImageIcon,
+    ZoomIn,
+    Video,
+    Triangle,
+    Wand2,
+    Sparkles
+} from "lucide-react";
+import { useToolStore } from "@/stores/toolStore";
+import { useCompositionStore } from "@/stores/compositionStore";
+import { useLayerStore } from "@/stores/layerStore";
+import { useSelectionStore } from "@/stores/selectionStore";
+import { useTimelineStore } from "@/stores/timelineStore";
+import { useRef } from "react";
 
 export function Toolbar() {
-    const { 
-        addText, 
-        addImage, 
-        addShape,
-        deleteSelected,
-        duplicateSelected,
-        canUndo,
-        canRedo,
-        undo,
-        redo,
-        selectedElementId
-    } = useEditor();
+    const activeTool = useToolStore(s => s.activeTool);
+    const setTool = useToolStore(s => s.setTool);
+    const activeCompId = useCompositionStore(s => s.activeCompositionId);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    
+    const addTextLayer = () => {
+        if (!activeCompId) return;
+        const currentTime = useTimelineStore.getState().currentTime;
+        const duration = useTimelineStore.getState().duration;
+        const layerId = useLayerStore.getState().addLayer(activeCompId, "text", "Text Layer", {
+            inPoint: currentTime,
+            outPoint: Math.min(currentTime + 150, duration),
+            data: { content: "New Text", fontSize: 48, fontWeight: "bold", color: "#ffffff", fontFamily: "Inter" },
+        });
+        useCompositionStore.getState()._addLayerToComp(activeCompId, layerId);
+        useSelectionStore.getState().selectLayer(layerId);
+        setTool("selection");
+    };
 
-    const tools = [
-        { icon: MousePointer2, label: "Выделение", action: () => {}, active: true },
-        { icon: Type, label: "Добавить текст", action: addText },
-        { icon: ImageIcon, label: "Добавить медиа", action: () => addImage("https://placehold.co/600x400/png") },
-        { icon: LayoutTemplate, label: "Добавить фигуру", action: addShape },
-    ];
+    const addShapeLayer = (shapeType: "rectangle" | "ellipse" | "triangle" = "rectangle") => {
+        if (!activeCompId) return;
+        const currentTime = useTimelineStore.getState().currentTime;
+        const duration = useTimelineStore.getState().duration;
+        const layerId = useLayerStore.getState().addLayer(activeCompId, "shape", `Shape: ${shapeType}`, {
+            inPoint: currentTime,
+            outPoint: Math.min(currentTime + 150, duration),
+            data: { fill: "#6366f1", width: 200, height: 200, borderRadius: shapeType === "rectangle" ? 8 : 0, shapeType },
+        });
+        useCompositionStore.getState()._addLayerToComp(activeCompId, layerId);
+        useSelectionStore.getState().selectLayer(layerId);
+        setTool("selection");
+    };
 
-    const aiTools = [
-        { icon: Sparkles, label: "AI Генерация (Промпт)", action: () => alert("AI Генерация скоро будет доступна"), highlight: true },
-    ];
+    const addSolidLayer = () => {
+        if (!activeCompId) return;
+        const currentTime = useTimelineStore.getState().currentTime;
+        const duration = useTimelineStore.getState().duration;
+        const layerId = useLayerStore.getState().addLayer(activeCompId, "solid", "Solid", {
+            inPoint: currentTime,
+            outPoint: Math.min(currentTime + 150, duration),
+            data: { color: "#333333", width: 1920, height: 1080 },
+        });
+        useCompositionStore.getState()._addLayerToComp(activeCompId, layerId);
+        useSelectionStore.getState().selectLayer(layerId);
+    };
+    const addGradientLayer = () => {
+        if (!activeCompId) return;
+        const currentTime = useTimelineStore.getState().currentTime;
+        const duration = useTimelineStore.getState().duration;
+        const layerId = useLayerStore.getState().addLayer(activeCompId, "gradient", "Gradient", {
+            inPoint: currentTime,
+            outPoint: Math.min(currentTime + 150, duration),
+            data: {
+                gradientType: "linear",
+                angle: 90,
+                width: 1920,
+                height: 1080,
+                colors: [{ color: "#6366f1", stop: 0 }, { color: "#ec4899", stop: 100 }],
+            },
+        });
+        useCompositionStore.getState()._addLayerToComp(activeCompId, layerId);
+        useSelectionStore.getState().selectLayer(layerId);
+    };
+
+    const addParticleLayer = () => {
+        if (!activeCompId) return;
+        const currentTime = useTimelineStore.getState().currentTime;
+        const duration = useTimelineStore.getState().duration;
+        const layerId = useLayerStore.getState().addLayer(activeCompId, "particle", "Particle System", {
+            inPoint: currentTime,
+            outPoint: Math.min(currentTime + 150, duration),
+            data: {
+                count: 80,
+                size: 6,
+                sizeVariance: 0.4,
+                speed: 2,
+                color: "#6366f1",
+                colorEnd: "#ec4899",
+                shape: "circle",
+                spawnX: 0.5,
+                spawnY: 0.7,
+                spread: 360,
+                gravity: 0.02,
+                life: 60,
+                opacity: 80,
+                blurRadius: 1,
+                width: 1920,
+                height: 1080,
+            },
+        });
+        useCompositionStore.getState()._addLayerToComp(activeCompId, layerId);
+        useSelectionStore.getState().selectLayer(layerId);
+    };
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || !activeCompId) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const dataUrl = event.target?.result as string;
+            
+            // Get image dimensions
+            const img = new Image();
+            img.onload = () => {
+                const currentTime = useTimelineStore.getState().currentTime;
+                const duration = useTimelineStore.getState().duration;
+                const layerId = useLayerStore.getState().addLayer(activeCompId, "image", file.name, {
+                    inPoint: currentTime,
+                    outPoint: Math.min(currentTime + 150, duration),
+                    data: { src: dataUrl, width: img.width, height: img.height },
+                });
+                useCompositionStore.getState()._addLayerToComp(activeCompId, layerId);
+                useSelectionStore.getState().selectLayer(layerId);
+            };
+            img.src = dataUrl;
+        };
+        reader.readAsDataURL(file);
+        
+        // Reset input
+        e.target.value = '';
+    };
 
     return (
-        <TooltipProvider delayDuration={300}>
-            <div className="w-16 h-full flex flex-col items-center py-4 bg-background border-r shrink-0 gap-4">
-                
-                {/* Main Tools */}
-                <div className="flex flex-col gap-2 w-full px-2">
-                    {tools.map((tool, idx) => (
-                        <Tooltip key={idx}>
-                            <TooltipTrigger asChild>
-                                <Button 
-                                    variant={tool.active ? "secondary" : "ghost"} 
-                                    size="icon" 
-                                    className={`w-full h-12 rounded-xl transition-all ${tool.active ? "bg-primary/10 text-primary" : ""}`}
-                                    onClick={tool.action}
-                                >
-                                    <tool.icon className="h-5 w-5" />
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="right">
-                                <p>{tool.label}</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    ))}
-                </div>
+        <div className="flex flex-col items-center py-4 gap-1 text-zinc-400">
+            <ToolButton 
+                icon={<MousePointer2 size={18} />} 
+                label="Selection Tool (V)" 
+                isActive={activeTool === "selection"} 
+                onClick={() => setTool("selection")}
+            />
+            <ToolButton 
+                icon={<Hand size={18} />} 
+                label="Hand Tool (H)" 
+                isActive={activeTool === "hand"} 
+                onClick={() => setTool("hand")}
+            />
+            <ToolButton 
+                icon={<ZoomIn size={18} />} 
+                label="Zoom Tool (Z)" 
+                isActive={activeTool === "zoom"} 
+                onClick={() => setTool("zoom")}
+            />
+            
+            <div className="w-6 h-px bg-[#333] my-2" />
+            
+            <ToolButton 
+                icon={<Type size={18} />} 
+                label="Add Text Layer (T)" 
+                isActive={activeTool === "type"} 
+                onClick={addTextLayer}
+            />
+            <ToolButton 
+                icon={<Square size={18} />} 
+                label="Add Rectangle" 
+                isActive={false} 
+                onClick={() => addShapeLayer("rectangle")}
+            />
+            <ToolButton 
+                icon={<Circle size={18} />} 
+                label="Add Ellipse" 
+                isActive={false} 
+                onClick={() => addShapeLayer("ellipse")}
+            />
+            <ToolButton 
+                icon={<Triangle size={18} />} 
+                label="Add Triangle" 
+                isActive={false} 
+                onClick={() => addShapeLayer("triangle")}
+            />
+            
+            <div className="w-6 h-px bg-[#333] my-2" />
 
-                <Separator className="w-8" />
+            {/* Hidden file input for image upload */}
+            <input 
+                type="file" 
+                ref={fileInputRef} 
+                className="hidden" 
+                accept="image/*" 
+                onChange={handleImageUpload} 
+            />
 
-                {/* AI Tools */}
-                <div className="flex flex-col gap-2 w-full px-2">
-                    {aiTools.map((tool, idx) => (
-                        <Tooltip key={idx}>
-                            <TooltipTrigger asChild>
-                                <Button 
-                                    variant="outline" 
-                                    size="icon" 
-                                    className="w-full h-12 rounded-xl border-primary/50 text-primary hover:bg-primary/10 transition-all shadow-[0_0_15px_rgba(99,102,241,0.2)]"
-                                    onClick={tool.action}
-                                >
-                                    <tool.icon className="h-5 w-5" />
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="right">
-                                <p>{tool.label}</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    ))}
-                </div>
+            <ToolButton 
+                icon={<ImageIcon size={18} />} 
+                label="Add Image Layer" 
+                isActive={false} 
+                onClick={() => {
+                    fileInputRef.current?.click();
+                }}
+            />
+            <ToolButton 
+                icon={<Video size={18} />} 
+                label="Add Solid Layer" 
+                isActive={false} 
+                onClick={addSolidLayer}
+            />
+            <ToolButton 
+                icon={<Wand2 size={18} />} 
+                label="Add Gradient Layer" 
+                isActive={false} 
+                onClick={addGradientLayer}
+            />
+            <ToolButton 
+                icon={<Sparkles size={18} />} 
+                label="Add Particle System" 
+                isActive={false} 
+                onClick={addParticleLayer}
+            />
+        </div>
+    );
+}
 
-                <Separator className="w-8" />
-
-                {/* Actions */}
-                <div className="flex flex-col gap-2 w-full px-2 mt-auto">
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="w-full h-12"
-                                disabled={!canUndo}
-                                onClick={undo}
-                            >
-                                <Undo2 className="h-4 w-4" />
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="right">Отменить (Ctrl+Z)</TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="w-full h-12"
-                                disabled={!canRedo}
-                                onClick={redo}
-                            >
-                                <Redo2 className="h-4 w-4" />
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="right">Повторить (Ctrl+Y)</TooltipContent>
-                    </Tooltip>
-
-                    <Separator className="w-8 mx-auto my-1" />
-
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="w-full h-12"
-                                disabled={!selectedElementId}
-                                onClick={duplicateSelected}
-                            >
-                                <Copy className="h-4 w-4" />
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="right">Дублировать (Ctrl+D)</TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="w-full h-12 text-destructive hover:text-destructive hover:bg-destructive/10"
-                                disabled={!selectedElementId}
-                                onClick={deleteSelected}
-                            >
-                                <Trash2 className="h-4 w-4" />
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="right">Удалить (Del)</TooltipContent>
-                    </Tooltip>
-                </div>
-            </div>
-        </TooltipProvider>
+function ToolButton({ icon, label, isActive, onClick }: { 
+    icon: React.ReactNode; 
+    label: string; 
+    isActive?: boolean; 
+    onClick?: () => void;
+}) {
+    return (
+        <button 
+            className={`p-2 rounded-md transition-colors ${
+                isActive 
+                    ? "bg-accent text-accent-foreground" 
+                    : "hover:bg-[#2a2a2a] hover:text-white"
+            }`}
+            title={label}
+            onClick={onClick}
+        >
+            {icon}
+        </button>
     );
 }

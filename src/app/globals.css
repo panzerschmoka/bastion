@@ -1,55 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════
+   MOTIONAI — 1930s MODERNISM / ARCHIVE ARTIFACT
+   Minimalism, strict grid, paper & ink texture
+   ═══════════════════════════════════════════════════ */
+
 @layer base {
     :root {
-        /* Claude Console Light — warm off-white, dark charcoal text, peach accent */
-        --background: 40 33% 97%;        /* #FAF9F6 */
-        --foreground: 20 14% 10%;        /* #1C1917 */
-        --card: 0 0% 100%;              /* #FFFFFF */
-        --card-foreground: 20 14% 10%;   /* #1C1917 */
-        --popover: 0 0% 100%;
-        --popover-foreground: 20 14% 10%;
-        --primary: 20 14% 10%;           /* Dark charcoal buttons */
-        --primary-foreground: 40 33% 97%;/* Off-white text on dark buttons */
-        --secondary: 40 20% 94%;         /* #F2F0EB — slightly warm gray */
-        --secondary-foreground: 20 14% 10%;
-        --muted: 40 12% 93%;             /* #EDEBE7 */
-        --muted-foreground: 25 5% 45%;   /* #787370 — warm mid-gray */
-        --accent: 18 60% 59%;            /* #D97757 — Anthropic Peach */
-        --accent-foreground: 0 0% 100%;
-        --destructive: 0 72% 51%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 30 8% 88%;             /* #E5E2DD — warm border */
-        --input: 30 8% 88%;
-        --ring: 18 60% 59%;              /* Peach ring */
-        --radius: 0.5rem;
+        /* Palette tokens */
+        --bg: #0B0D10;
+        --paper: #F3EBDD;
+        --ink: #101317;
+        --accent: #D3121F;
+        --steel: #A7B0BA;
+        
+        /* Line opacities depending on dark/light context. For root (dark mode base): */
+        --line: rgba(243,235,221,0.18);
     }
 
-    .dark {
-        /* Claude Console Dark — deep charcoal, soft white text, peach accent */
-        --background: 240 6% 10%;        /* #18181A */
-        --foreground: 0 0% 93%;          /* #EDEDED */
-        --card: 240 5% 16%;              /* #27272A */
-        --card-foreground: 0 0% 93%;
-        --popover: 240 5% 16%;
-        --popover-foreground: 0 0% 93%;
-        --primary: 0 0% 93%;             /* White buttons in dark mode */
-        --primary-foreground: 240 6% 10%;
-        --secondary: 240 4% 20%;         /* #313135 */
-        --secondary-foreground: 0 0% 93%;
-        --muted: 240 4% 20%;
-        --muted-foreground: 240 3% 58%;  /* #929295 */
-        --accent: 18 60% 59%;            /* #D97757 — Anthropic Peach */
-        --accent-foreground: 0 0% 100%;
-        --destructive: 0 72% 51%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 240 4% 24%;            /* #3B3B40 */
-        --input: 240 4% 24%;
-        --ring: 18 60% 59%;              /* Peach ring */
+    .light-section {
+        --bg: #F3EBDD;
+        --paper: #0B0D10;
+        --line: rgba(16,19,23,0.12);
+        @apply bg-[var(--bg)] text-[var(--paper)];
     }
 }
 
@@ -57,29 +34,125 @@
     * {
         @apply border-border;
     }
+
+    html {
+        scroll-behavior: smooth;
+        @apply antialiased;
+    }
+
     body {
         @apply bg-background text-foreground;
         font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    /* Archive-like typography */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Bebas Neue', 'Oswald', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        line-height: 0.95;
+    }
+
+    h1 {
+        font-size: clamp(56px, 10vw, 88px);
+    }
+
+    h2 {
+        font-size: clamp(32px, 6vw, 64px);
+    }
+
+    h3 {
+        font-size: clamp(24px, 3vw, 36px);
+    }
+
+    /* Subtle links */
+    a {
+        text-decoration: none;
+        transition: color 150ms ease, border-color 150ms ease;
+        border-bottom: 1px solid transparent;
+    }
+    
+    a:hover {
+        border-bottom-color: var(--accent);
+    }
+
+    /* Selection */
+    ::selection {
+        background: var(--accent);
+        color: var(--paper);
+    }
+    
+    /* Strict focus rings */
+    *:focus-visible {
+        outline: 1px solid rgba(211, 18, 31, 0.4);
+        outline-offset: 4px;
     }
 }
 
-/* Scrollbar styles */
+/* ── SCROLLBAR — minimalistic ── */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
 }
 ::-webkit-scrollbar-track {
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted-foreground) / 0.3);
-    border-radius: 999px;
+    background: var(--line);
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground) / 0.5);
+    background: var(--steel);
 }
 
-/* Smooth transitions */
+/* ── TEXTURES & PATTERNS ── */
+.texture-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.halftone-bg {
+    background-image: radial-gradient(var(--steel) 1px, transparent 1px);
+    background-size: 16px 16px;
+    opacity: 0.03;
+}
+
+/* ── ARCHIVAL TAGS & UI ── */
+.archive-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--steel);
+}
+
+/* Minimalist separator */
+.line-divider {
+    height: 1px;
+    width: 100%;
+    background: var(--line);
+}
+
+.line-vertical {
+    width: 1px;
+    height: 100%;
+    background: var(--line);
+}
+
+/* Grid overlay helper */
+.grid-overlay {
+    background-size: 100px 100px;
+    background-image: 
+        linear-gradient(to right, var(--line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+}
+
+/* Prevent pure black shadows */
 * {
-    scroll-behavior: smooth;
+    box-shadow: none !important;
 }

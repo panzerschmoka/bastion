@@ -18,10 +18,8 @@ export async function GET(
         const project = await prisma.project.findUnique({
             where: { id: params.id },
             include: {
-                scenes: {
-                    orderBy: { order: "asc" },
-                    include: { elements: true },
-                },
+                videos: true,
+                assets: true,
             },
         });
 
@@ -67,9 +65,13 @@ export async function PATCH(
             );
         }
 
+        const { settings, ...rest } = parsed.data;
         const updated = await prisma.project.update({
             where: { id: params.id },
-            data: parsed.data,
+            data: {
+                ...rest,
+                ...(settings !== undefined && { settings: JSON.stringify(settings) }),
+            },
         });
 
         return NextResponse.json(updated);

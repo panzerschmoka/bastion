@@ -3,7 +3,8 @@ import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import { PATHS, FILE_LIMITS } from "@/lib/constants";
 import { ValidationError } from "@/lib/errors";
-import type { AssetType } from "@prisma/client";
+
+export type AssetType = "IMAGE" | "VIDEO" | "AUDIO";
 
 /** Определяет тип ассета по MIME */
 export function getAssetType(mimeType: string): AssetType {

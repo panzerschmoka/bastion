@@ -2,53 +2,62 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ThemeToggle } from "./ThemeToggle";
 import { UserMenu } from "./UserMenu";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { FileVideo } from "lucide-react";
 
 export function Navbar() {
     const { isAuthenticated, isLoading } = useAuth();
     const pathname = usePathname();
 
-    // Не показываем навбар в самом редакторе (там свой тулбар)
+    // Не показываем навбар в редакторе
     if (pathname?.startsWith("/editor/")) {
         return null;
     }
 
     return (
-        <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="fixed top-0 z-40 w-full border-b border-charcoal bg-abyss">
             <div className="container flex h-14 items-center justify-between mx-auto px-4 md:px-8">
-                <div className="flex items-center gap-6 md:gap-10">
-                    <Link href="/" className="flex items-center space-x-2">
-                        <FileVideo className="h-6 w-6 text-primary" />
-                        <span className="inline-block font-bold">MotionAI</span>
+                {/* Логотип — государственный шрифт */}
+                <div className="flex items-center gap-8">
+                    <Link href="/" className="flex items-center gap-3 group">
+                        {/* Красная метка вместо иконки */}
+                        <div className="w-3 h-3 bg-state-red" />
+                        <span className="font-display text-xl tracking-[0.4em] text-bone uppercase">
+                            MotionAI
+                        </span>
                     </Link>
+
                     {isAuthenticated && (
-                        <nav className="hidden gap-6 md:flex">
+                        <nav className="hidden md:flex gap-8">
                             <Link
                                 href="/dashboard"
-                                className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                                className="text-annotation uppercase tracking-decree text-bone/50 hover:text-state-red transition-colors duration-150"
                             >
-                                Проекты
+                                ПРОЕКТЫ
                             </Link>
                         </nav>
                     )}
                 </div>
-                
-                <div className="flex items-center space-x-4">
-                    <ThemeToggle />
+
+                {/* Навигация справа */}
+                <div className="flex items-center gap-4">
+                    <Link
+                        href="/pricing"
+                        className="text-annotation uppercase tracking-decree text-bone/50 hover:text-state-red transition-colors duration-150 mr-4"
+                    >
+                        ТАРИФЫ
+                    </Link>
                     {!isLoading && (
                         isAuthenticated ? (
                             <UserMenu />
                         ) : (
-                            <div className="flex items-center gap-2">
-                                <Button variant="ghost" asChild>
-                                    <Link href="/login">Войти</Link>
+                            <div className="flex items-center gap-3">
+                                <Button variant="ghost" size="sm" asChild>
+                                    <Link href="/login">ВОЙТИ</Link>
                                 </Button>
-                                <Button asChild>
-                                    <Link href="/register">Регистрация</Link>
+                                <Button variant="propaganda" size="sm" asChild>
+                                    <Link href="/register">РЕГИСТРАЦИЯ</Link>
                                 </Button>
                             </div>
                         )

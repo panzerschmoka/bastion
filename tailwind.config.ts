@@ -13,49 +13,73 @@ const config: Config = {
             center: true,
             padding: "2rem",
             screens: {
-                "2xl": "1400px",
+                "2xl": "1280px",
             },
         },
         extend: {
             colors: {
-                border: "hsl(var(--border))",
-                input: "hsl(var(--input))",
-                ring: "hsl(var(--ring))",
-                background: "hsl(var(--background))",
-                foreground: "hsl(var(--foreground))",
+                border: "var(--line)",
+                input: "var(--line)",
+                ring: "var(--accent)",
+                background: "var(--bg)",
+                foreground: "var(--paper)",
+                
+                // Keep shadcns semantic tokens mapped
                 primary: {
-                    DEFAULT: "hsl(var(--primary))",
-                    foreground: "hsl(var(--primary-foreground))",
+                    DEFAULT: "var(--accent)",
+                    foreground: "var(--paper)",
                 },
                 secondary: {
-                    DEFAULT: "hsl(var(--secondary))",
-                    foreground: "hsl(var(--secondary-foreground))",
+                    DEFAULT: "var(--ink)",
+                    foreground: "var(--paper)",
                 },
                 destructive: {
-                    DEFAULT: "hsl(var(--destructive))",
-                    foreground: "hsl(var(--destructive-foreground))",
+                    DEFAULT: "var(--accent)",
+                    foreground: "var(--paper)",
                 },
                 muted: {
-                    DEFAULT: "hsl(var(--muted))",
-                    foreground: "hsl(var(--muted-foreground))",
+                    DEFAULT: "var(--ink)",
+                    foreground: "var(--steel)",
                 },
                 accent: {
-                    DEFAULT: "hsl(var(--accent))",
-                    foreground: "hsl(var(--accent-foreground))",
+                    DEFAULT: "var(--accent)",
+                    foreground: "var(--paper)",
                 },
                 popover: {
-                    DEFAULT: "hsl(var(--popover))",
-                    foreground: "hsl(var(--popover-foreground))",
+                    DEFAULT: "var(--bg)",
+                    foreground: "var(--paper)",
                 },
                 card: {
-                    DEFAULT: "hsl(var(--card))",
-                    foreground: "hsl(var(--card-foreground))",
+                    DEFAULT: "var(--bg)",
+                    foreground: "var(--paper)",
                 },
+                
+                // Specific domain tokens
+                paper: "var(--paper)",
+                ink: "var(--ink)",
+                steel: "var(--steel)",
+                line: "var(--line)",
+            },
+            fontFamily: {
+                display: ['"Bebas Neue"', '"Oswald"', '"DIN Condensed"', 'sans-serif'],
+                sans: ['"Inter"', '"IBM Plex Sans"', 'sans-serif'],
             },
             borderRadius: {
-                lg: "var(--radius)",
-                md: "calc(var(--radius) - 2px)",
-                sm: "calc(var(--radius) - 4px)",
+                lg: "4px",
+                md: "2px",
+                sm: "0px",
+            },
+            fontSize: {
+                'hero': ['clamp(56px, 10vw, 88px)', { lineHeight: '0.95', letterSpacing: '0.05em' }],
+                'h2': ['clamp(32px, 6vw, 64px)', { lineHeight: '1.0', letterSpacing: '0.02em' }],
+                'h3': ['clamp(24px, 3vw, 36px)', { lineHeight: '1.05', letterSpacing: '0.01em' }],
+                'annotation': ['12px', { lineHeight: '1.4', letterSpacing: '0.08em' }],
+            },
+            letterSpacing: {
+                'monument': '0.05em',
+            },
+            backgroundImage: {
+                'grain': "url('/noise.webp')",
             },
             keyframes: {
                 "accordion-down": {
@@ -67,22 +91,24 @@ const config: Config = {
                     to: { height: "0" },
                 },
                 "fade-in": {
-                    from: { opacity: "0", transform: "translateY(12px)" },
+                    from: { opacity: "0", transform: "translateY(16px)" },
                     to: { opacity: "1", transform: "translateY(0)" },
                 },
-                "pulse-dot": {
-                    "0%, 100%": { opacity: "0.4" },
-                    "50%": { opacity: "1" },
+                "wipe-in": {
+                    from: { clipPath: "inset(100% 0 0 0)" },
+                    to: { clipPath: "inset(0 0 0 0)" },
                 },
+                "float": {
+                    "0%, 100%": { transform: "translateY(0)" },
+                    "50%": { transform: "translateY(-6px)" },
+                }
             },
             animation: {
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
-                "fade-in": "fade-in 0.5s ease-out both",
-                "pulse-dot": "pulse-dot 1.5s ease-in-out infinite",
-            },
-            fontFamily: {
-                sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+                "fade-in": "fade-in 600ms ease-out both",
+                "wipe-in": "wipe-in 800ms cubic-bezier(0.16, 1, 0.3, 1) both",
+                "float": "float 8s ease-in-out infinite",
             },
         },
     },
