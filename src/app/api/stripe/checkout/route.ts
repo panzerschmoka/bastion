@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "НЕДОПУСТИМЫЙ ПЛАН" }, { status: 400 });
         }
 
-        const planConfig = PLANS[plan];
+        const planConfig = PLANS[plan as keyof typeof PLANS];
         if (!planConfig.priceId) {
             return NextResponse.json({ error: "ПЛАН НЕ НАСТРОЕН В STRIPE" }, { status: 400 });
         }
