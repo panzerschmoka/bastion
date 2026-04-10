@@ -71,8 +71,8 @@ const config: Config = {
             },
             fontSize: {
                 'hero': ['clamp(56px, 10vw, 88px)', { lineHeight: '0.95', letterSpacing: '0.05em' }],
-                'h2': ['clamp(32px, 6vw, 64px)', { lineHeight: '1.0', letterSpacing: '0.02em' }],
-                'h3': ['clamp(24px, 3vw, 36px)', { lineHeight: '1.05', letterSpacing: '0.01em' }],
+                'h2': ['clamp(28px, 4.5vw, 52px)', { lineHeight: '1.0', letterSpacing: '0.02em' }],
+                'h3': ['clamp(22px, 2.5vw, 32px)', { lineHeight: '1.05', letterSpacing: '0.01em' }],
                 'annotation': ['12px', { lineHeight: '1.4', letterSpacing: '0.08em' }],
             },
             letterSpacing: {
